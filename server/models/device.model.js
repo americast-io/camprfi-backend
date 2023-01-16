@@ -14,6 +14,23 @@ const DeviceSchema = new mongoose.Schema(
       required: [true, '{PATH} is required.'],
       minlength: [6, '{PATH} must be at least {MINLENGTH} characters.'],
     },
+
+    IMEI: {
+      type: String,
+      required: [true, '{PATH} is required.'],
+      minlength: [14, '{PATH} must be at least {MINLENGTH} characters.'],
+    },
+
+    modelNumber: {
+      type: String,
+      minlength: [6, '{PATH} must be at least {MINLENGTH} characters.'],
+    },
+
+    ICCID: {
+      type: String,
+      required: [true, '{PATH} is required.'],
+      minlength: [6, '{PATH} must be at least {MINLENGTH} characters.'],
+    },
     
   },
   { timestamps: true } 
