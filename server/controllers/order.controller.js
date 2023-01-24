@@ -1,5 +1,9 @@
 const { Order } = require('../models/order.model');
-const { handleCreateDevice } = require('./device.controller');
+
+const {
+    createOrder,
+    getAllOrders,
+} = require('../services/order.service');
 
 const axios = require('axios');
 
@@ -21,18 +25,26 @@ const data = {
 }
 
 const priceToPlanMap = {
-    ruety84754uyeriti: "1149",
+    ruety84754uyeriti: {offerId: "1149", duration: 60000}
+}
+
+function timeoutFunc(delay) {
+    return new Promise( res => setTimeout(res, delay) );
 }
 
 
-// Get All Orders from DB
-// const handleGetAllOrders = 
+// Get All Orders from DB => /api/orders
+const handleGetAllOrders = async (req, res) => {
+    try{
+        const orders = await getAllOrders();
+        return res.json(orders);
 
-
-
+    }catch(error) {
+        return res.status(400).json(error);
+    }
+};
 
 // Create a new order => /api/orders
-
 const handleCreateOrder = async (req, res) => {
     console.log('in order controller')
 
@@ -40,7 +52,6 @@ const handleCreateOrder = async (req, res) => {
 
     try{
         const {
-            orderNumber,
             paymentInfo,
             productId,
             firstName,
@@ -53,7 +64,6 @@ const handleCreateOrder = async (req, res) => {
         console.log(req.body)
 
         const order = await Order.create({
-            orderNumber,
             paymentInfo,
             productId,
             firstName,
@@ -63,7 +73,6 @@ const handleCreateOrder = async (req, res) => {
             paidAt: Date.now(),
         });
 
-        // const order = await Order.create(req.body);
         return res.json(order);
     } catch(error) {
 
@@ -75,7 +84,7 @@ const handleCreateOrder = async (req, res) => {
 };
 
 const handleDevicePause = async (req, res, next) => {
-    console.log("making an unpause request to ultramobile")
+    console.log("making a pause request to ultramobile")
 
     try{
         const ultraRes = await axios.post(`${pauseUrl}${req.params.iccid}`, data, {
@@ -98,14 +107,14 @@ const handleDevicePause = async (req, res, next) => {
 const handleDeviceUnPauseWithOffer = async (req, res, next) => {
     console.log("making an unpause request to ultramobile")
     const priceId = req.body.priceId;
-    console.log(priceId);
 
-    const offerId = priceToPlanMap[priceId];
-    console.log(offerId);
+    const offerIdFromMap = priceToPlanMap[priceId]["offerId"];
+
+    const timeout = priceToPlanMap[priceId]["duration"];
 
     const unPauseData = {
         offerIds: [
-            offerId
+            offerIdFromMap
         ],
         callbackUrl: callbackUrl,
         partnerTransactionId: partnerTransactionId,
@@ -118,7 +127,10 @@ const handleDeviceUnPauseWithOffer = async (req, res, next) => {
                 'Authorization': `Basic ${token}`
             },
         })
-          // return back object to the front end
+
+        console.log(ultraRes.status)
+
+        //   return back object to the front end
         res.status(ultraRes.status).json({
             success: true,
             message: ultraRes.data,
@@ -132,6 +144,7 @@ const handleDeviceUnPauseWithOffer = async (req, res, next) => {
 
 const handleGetSubscribersByIccid = async (req, res, next) => {
     console.log("making request to get subscriber by iccid ")
+    console.log(partnerTransactionId)
 
     try{
         const ultraRes = await axios.get(`${subscruberIccidurl}${req.params.iccid}`, {
@@ -153,9 +166,49 @@ const handleGetSubscribersByIccid = async (req, res, next) => {
     }
 }
 
+const handleDeviceUnpauseWithTimer = async (req, res, next) => {
+    console.log('calling unpause in timed function')
+    const priceId = req.body.priceId;
+
+    const offerIdFromMap = priceToPlanMap[priceId]["offerId"];
+
+    const timeout = priceToPlanMap[priceId]["duration"];
+
+    const unPauseData = {
+        offerIds: [
+            offerIdFromMap
+        ],
+        callbackUrl: callbackUrl,
+        partnerTransactionId: partnerTransactionId,
+
+    }
+
+    const ultraRes = await axios.post(`${unPauseUrl}${req.params.iccid}`, unPauseData, {
+        headers: {
+            'Authorization': `Basic ${token}`
+        },
+    })
+
+    // await handleDeviceUnPauseWithOffer(req, res);
+
+    console.log(ultraRes.status)
+
+
+
+
+    await timeoutFunc(60000);
+
+    console.log('calling pause in timed function')
+
+    await handleDevicePause(req, res);
+}
+
+
 module.exports = {
     handleCreateOrder: handleCreateOrder,
     handleDevicePause: handleDevicePause,
     handleGetSubscribersByIccid: handleGetSubscribersByIccid,
     handleDeviceUnPauseWithOffer,
+    handleDeviceUnpauseWithTimer: handleDeviceUnpauseWithTimer,
+    handleGetAllOrders,
 };

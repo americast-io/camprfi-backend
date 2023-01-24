@@ -1,10 +1,21 @@
 const express = require('express');
 const cors = require('cors');
 
+const errorMiddleware = require('./middlewares/errors');
+
 // Environment vars
 const port = 8000;
 
 const dotenv = require('dotenv');
+
+// Handle Uncaught exceptions
+process.on('uncaughtException', err => {
+    console.log(`ERROR: ${err.stack}`);
+    console.log('Shutting down due to uncaught exception');
+    process.exit(1)
+} )
+
+
 dotenv.config();
 
 // import all routes
@@ -14,6 +25,7 @@ const { productRouter } = require('./routes/product.routes');
 const { paymentRouter } = require('./routes/payment.routes');
 const { orderRouter } = require('./routes/order.routes');
 const { priceRouter } = require('./routes/price.routes');
+const { authRouter } = require('./routes/auth.routes');
 
 // requiring / importing runs the file!
 // This file doesn't need to export anything though, so we need a var.
@@ -39,7 +51,20 @@ app.use('/api/products', productRouter);
 app.use('/api/payment/process', paymentRouter);
 app.use('/api/orders', orderRouter);
 app.use('/api/prices', priceRouter);
+app.use('/api/auth', authRouter);
 
-app.listen(port, () =>
-    console.log(`Listening on port ${port} for REQuests to RESpond to.`)
+// Middleware to handle errors
+app.use(errorMiddleware);
+
+const server = app.listen(port, () =>
+    console.log(`Listening on port ${port} for REQuests to RESpond to in ${process.env.NODE_ENV} mode.`)
 );
+
+// Handle Unhandled Promise rejections
+process.on('unhandledRejection', err => {
+    console.log(`ERROR: ${err.message}`);
+    console.log('Shutting down the server due to Unhandled Promise rejection');
+    server.close(() => {
+        process.exit(1)
+    })
+})

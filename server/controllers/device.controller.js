@@ -1,3 +1,5 @@
+const ErrorHandler = require('../utils/errorHandler');
+
 const {
     createDevice,
     getAllDevices,
@@ -6,6 +8,7 @@ const {
     updateDeviceById,
     getDeviceByKeyword,
   } = require('../services/device.service');
+
   
   const handleCreateDevice = async (req, res) => {
     console.log('controller: handleCreateDevice req.body:', req.body);
@@ -37,9 +40,12 @@ const {
     }
   };
   
-  const handleGetDeviceById = async (req, res) => {
+  const handleGetDeviceById = async (req, res, next) => {
     try {
       const device = await getDeviceById(req.params.id);
+      if(!device) {
+        return next(new ErrorHandler('Device not found', 404));
+      }
       return res.json(device);
     } catch (error) {
       return res.status(400).json(error);
