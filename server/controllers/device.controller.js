@@ -12,6 +12,8 @@ const {
   
   const handleCreateDevice = async (req, res) => {
     console.log('controller: handleCreateDevice req.body:', req.body);
+
+    req.body.user = req.user.id;
   
     try {
       const device = await createDevice(req.body);

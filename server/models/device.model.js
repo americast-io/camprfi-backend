@@ -34,6 +34,12 @@ const DeviceSchema = new mongoose.Schema(
       required: [true, '{PATH} is required.'],
       minlength: [6, '{PATH} must be at least {MINLENGTH} characters.'],
     },
+
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+      required: true
+    }
     
   },
   { timestamps: true } 

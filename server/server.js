@@ -1,6 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 
+const cookieParser = require('cookie-parser');
+
+
 const errorMiddleware = require('./middlewares/errors');
 
 // Environment vars
@@ -45,6 +48,7 @@ app.use(cors());
 
 // req.body undefined without this!
 app.use(express.json());
+app.use(cookieParser());
 
 app.use('/api/devices', deviceRouter);
 app.use('/api/products', productRouter);

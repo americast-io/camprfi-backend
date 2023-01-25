@@ -1,31 +1,26 @@
 const { User } = require('../models/user.model');
 
+const ErrorHandler = require('../utils/errorHandler');
+const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
+const sendToken = require('../utils/jwtToken');
+
 // Register a user => /api/register
-exports.registerUser = async (req, res, next) => {
+exports.registerUser = catchAsyncErrors( async (req, res, next) => {
     const { name, email, password } = req.body;
 
-    try {
         const user = await User.create({
             name,
             email,
             password,
         });
 
-        const token = user.getJwtToken();
-    
-        res.status(200).json({
-            success: true,
-            token
-        })
+    sendToken(user, 200, res);
 
-    }catch(error){
-        return res.status(400).json({error});
-    }
-}
+})
 
 
 // Login User => /api/login
-exports.loginUser = async (req, res, next) => {
+exports.loginUser = catchAsyncErrors( async (req, res, next) => {
     const { email, password } = req.body;
 
     // Checks if email and password is entered by user 
@@ -47,11 +42,21 @@ exports.loginUser = async (req, res, next) => {
         return next(new ErrorHandler('Invalid Email or Password', 401));
     }
 
-    const token = user.getJwtToken();
+    sendToken(user, 200, res);
+
+})
+
+
+// Logout user => /api/logout
+exports.logout = catchAsyncErrors( async (req, res, next) => {
+    res.cookie('token', null, {
+        expires: new Date(Date.now()),
+        httpOnly: true
+    })
 
     res.status(200).json({
         success: true,
-        token
+        message: 'Logged out'
     })
+})
 
-}
