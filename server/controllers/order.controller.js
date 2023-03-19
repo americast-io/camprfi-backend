@@ -12,11 +12,11 @@ const password = process.env.ULTRA_API_PASSWORD;
 
 const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64')
 
-const pauseUrl = 'https://connect-api.ultramobile.com/v1/connect/pause/'
-const subscruberIccidurl = 'https://connect-api.ultramobile.com/v1/connect/subscriber/'
-const unPauseUrl = 'https://connect-api.ultramobile.com/v1/connect/unPauseWithOffer/'
+const pauseUrl = process.env.PAUSE_URL;
+const subscruberIccidurl = process.env.SUBSCRIBER_ICCID_URL;
+const unPauseUrl = process.env.UNPAUSE_URL;
 
-const callbackUrl = "https://api.camprfi.com/";
+const callbackUrl = process.env.CALLBACK_URL;
 const partnerTransactionId = process.env.ULTRA_PARTNER_TRANSACTION_ID;
 
 const data = {
@@ -57,7 +57,7 @@ const handleCreateOrder = async (req, res) => {
             firstName,
             lastName,
             email, 
-            // device,
+            device,
 
         } = req.body;
 
@@ -69,7 +69,7 @@ const handleCreateOrder = async (req, res) => {
             firstName,
             lastName,
             email, 
-            // device,
+            device,
             paidAt: Date.now(),
         });
 

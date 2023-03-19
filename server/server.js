@@ -11,6 +11,8 @@ const port = 8000;
 
 const dotenv = require('dotenv');
 
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
 // Handle Uncaught exceptions
 process.on('uncaughtException', err => {
     console.log(`ERROR: ${err.stack}`);
@@ -20,6 +22,9 @@ process.on('uncaughtException', err => {
 
 
 dotenv.config();
+
+
+
 
 // import all routes
 
@@ -59,6 +64,7 @@ app.use('/api/auth', authRouter);
 
 // Middleware to handle errors
 app.use(errorMiddleware);
+
 
 const server = app.listen(port, () =>
     console.log(`Listening on port ${port} for REQuests to RESpond to in ${process.env.NODE_ENV} mode.`)

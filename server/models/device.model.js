@@ -3,21 +3,16 @@ const mongoose = require('mongoose');
 
 const DeviceSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: [true, '{PATH} is required.'],
-      trim: true,
-      minlength: [3, '{PATH} must be at least {MINLENGTH} characters.'],
-    },
-
+    // lowercase letters 6
     deviceNumber: {
       type: String,
       required: [true, '{PATH} is required.'],
       minlength: [6, '{PATH} must be at least {MINLENGTH} characters.'],
+      maxlength: [6, '{PATH} must be at least {MAXLENGTH} characters.'],
       unique: true,
       // dropDups: true,
     },
-
+    
     IMEI: {
       type: String,
       required: [true, '{PATH} is required.'],
@@ -26,6 +21,7 @@ const DeviceSchema = new mongoose.Schema(
 
     modelNumber: {
       type: String,
+      required: [true, '{PATH} is required.'],
       minlength: [6, '{PATH} must be at least {MINLENGTH} characters.'],
     },
 

@@ -32,3 +32,24 @@ exports.authorizeRoles = (...roles) => {
         next()
     }
 }
+
+// Checks if portal is authenticated or not 
+exports.isAuthenticatedPortal = catchAsyncErrors( async (req, res, next) => {
+
+    const { token } = req.headers.authorization.split(' ')[1]
+
+    if(!token) {
+        return next(new ErrorHandler('Login to access this resource.', 401))
+    }
+
+    const username = process.env.CAMPRFI_API_USERNAME;
+    const password = process.env.CAMPRFI_API_PASSWORD;
+    const token2 = Buffer.from(`${username}:${password}`, 'utf8').toString('base64')
+
+    if (token !== token2) {
+        return next(new ErrorHandler('Access denied.', 401))
+    }
+
+    next()
+
+})

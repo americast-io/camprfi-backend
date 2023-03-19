@@ -10,9 +10,11 @@ const OrderSchema = new mongoose.Schema(
         paymentInfo: {
             id: {
                 type: String,
+                required: [true, '{PATH} is required'],
             },
             status: {
-                type: String
+                type: String,
+                required: [true, '{PATH} is required'],
             },
             
         },
@@ -37,15 +39,15 @@ const OrderSchema = new mongoose.Schema(
         },
         lastName: {
             type: String,
-            required: [false, 'Last name is required'],
+            required: [true, 'Last name is required'],
         },
         email: {
             type: String,
-            required: [false, 'Email is required'],
+            required: [true, 'Email is required'],
         },
         device: {
             type: mongoose.Schema.Types.ObjectId,
-            required: false,
+            required: [true, '{PATH} is required'],
             ref: 'Device',
         },
 

@@ -10,13 +10,15 @@ const {
     handleDeviceUnpauseWithTimer
 } = require('../controllers/order.controller');
 
-router.get('/', handleGetAllOrders);
+const { isAuthenticatedUser, isAuthenticatedPortal, authorizeRoles } = require('../middlewares/auth');
 
-router.get('/details/:iccid', handleGetSubscribersByIccid);
+router.get('/admin', isAuthenticatedUser, authorizeRoles('admin'),  handleGetAllOrders);
+
+router.get('/details/:iccid', isAuthenticatedPortal, handleGetSubscribersByIccid);
 
 router.post('/', handleCreateOrder);
-router.post('/pause/:iccid', handleDevicePause);
-router.post('/unpause/:iccid', handleDeviceUnPauseWithOffer);
-router.post('/upause/timer/:iccid', handleDeviceUnpauseWithTimer)
+router.post('/pause/:iccid', isAuthenticatedPortal,  handleDevicePause);
+router.post('/unpause/:iccid', isAuthenticatedPortal, handleDeviceUnPauseWithOffer);
+router.post('/upause/timer/:iccid', isAuthenticatedPortal,  handleDeviceUnpauseWithTimer)
 
 module.exports = { orderRouter: router };

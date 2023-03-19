@@ -24,6 +24,7 @@ const {
   };
   
   const handleGetAllDevices = async (req, res) => {
+    console.log('controller: handleGetAllDevices req.body:');
     try {
       const devices = await getAllDevices();
       if (req.query.keyword){
@@ -31,12 +32,12 @@ const {
         try {
           const device = await getDeviceByKeyword(req.query.keyword);
           console.log('controller: handleGetDeviceByKeyword req.body:', req.query);
-          return res.json(device);
+          return res.status(200).json(device);
         } catch (error) {
           return res.status(400).json(error);
         }
       }
-      return res.json(devices);
+      return res.status(200).json(devices);
     } catch (error) {
       return res.status(400).json(error);
     }

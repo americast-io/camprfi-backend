@@ -6,6 +6,7 @@ const sendToken = require('../utils/jwtToken');
 
 // Register a user => /api/register
 exports.registerUser = catchAsyncErrors( async (req, res, next) => {
+    console.log('controller: registerUser req.body:', req.body);
     const { name, email, password } = req.body;
 
         const user = await User.create({
@@ -44,6 +45,16 @@ exports.loginUser = catchAsyncErrors( async (req, res, next) => {
 
     sendToken(user, 200, res);
 
+})
+
+// Get currently logged in user details   =>   /api/auth/me
+exports.getUserProfile = catchAsyncErrors(async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+
+    res.status(200).json({
+        success: true,
+        user
+    })
 })
 
 

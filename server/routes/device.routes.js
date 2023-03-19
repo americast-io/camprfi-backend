@@ -20,6 +20,6 @@ router.get('/:id', handleGetDeviceById);
 // router.get('/', handleGetDeviceByKeyword);
 router.get('/', handleGetAllDevices);
 router.delete('/:id/admin', isAuthenticatedUser, authorizeRoles('admin'), handleDeleteDeviceById);
-router.put('/:id', handleUpdateDeviceById);
+router.put('/:id/admin', isAuthenticatedUser, authorizeRoles('admin'), handleUpdateDeviceById);
 
 module.exports = { deviceRouter: router };
