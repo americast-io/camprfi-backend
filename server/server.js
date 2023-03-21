@@ -60,7 +60,7 @@ app.use('/api/products', productRouter);
 app.use('/api/payment/process', paymentRouter);
 app.use('/api/orders', orderRouter);
 app.use('/api/prices', priceRouter);
-app.use('/api/auth', authRouter);
+app.use('/api/v1/auth', authRouter);
 
 // Middleware to handle errors
 app.use(errorMiddleware);

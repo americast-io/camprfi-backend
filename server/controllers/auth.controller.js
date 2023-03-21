@@ -4,9 +4,9 @@ const ErrorHandler = require('../utils/errorHandler');
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 const sendToken = require('../utils/jwtToken');
 
-// Register a user => /api/register
+// Register a user => /api/v1/auth/register
 exports.registerUser = catchAsyncErrors( async (req, res, next) => {
-    console.log('controller: registerUser req.body:', req.body);
+
     const { name, email, password } = req.body;
 
         const user = await User.create({
@@ -20,7 +20,7 @@ exports.registerUser = catchAsyncErrors( async (req, res, next) => {
 })
 
 
-// Login User => /api/login
+// Login User => /api/v1/auth/login
 exports.loginUser = catchAsyncErrors( async (req, res, next) => {
     const { email, password } = req.body;
 
@@ -58,7 +58,7 @@ exports.getUserProfile = catchAsyncErrors(async (req, res, next) => {
 })
 
 
-// Logout user => /api/logout
+// Logout user => /api/v1/auth/logout
 exports.logout = catchAsyncErrors( async (req, res, next) => {
     res.cookie('token', null, {
         expires: new Date(Date.now()),

@@ -9,15 +9,13 @@ const userSchema = new mongoose.Schema(
         name: {
             type: String,
             required: [true, 'Please enter your name'],
-            minlength: [2, 'Your name must be longer then {MINLENGTH} characters'],
             maxlength: [30, 'Your name cannot exceed {MAXLENGTH} characters']
         },
         email: {
             type: String,
             required: [true, 'Please enter your email'],
             unique: true,
-            // dropDups: true,
-            validate: [validator.isEmail, 'Please enter valid email address']
+            validate: [validator.isEmail, 'Please enter a valid email address']
         },
         password: {
             type: String,
@@ -44,7 +42,6 @@ userSchema.pre('save', async function (next) {
     if(!this.isModified('password')) {
         next()
     }
-
     this.password = await bcrypt.hash(this.password, 12)
 })
 

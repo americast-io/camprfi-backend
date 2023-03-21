@@ -11,13 +11,12 @@ const {
 
   
   const handleCreateDevice = async (req, res) => {
-    console.log('controller: handleCreateDevice req.body:', req.body);
 
     req.body.user = req.user.id;
   
     try {
       const device = await createDevice(req.body);
-      return res.json(device);
+      return res.status(201).json(device);
     } catch (error) {
       return res.status(400).json(error);
     }
