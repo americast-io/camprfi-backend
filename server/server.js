@@ -55,11 +55,11 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/api/devices', deviceRouter);
-app.use('/api/products', productRouter);
-app.use('/api/payment/process', paymentRouter);
-app.use('/api/orders', orderRouter);
-app.use('/api/prices', priceRouter);
+app.use('/api/v1/devices', deviceRouter);
+app.use('/api/v1/products', productRouter);
+app.use('/api//v1/payment/process', paymentRouter);
+app.use('/api/v1/orders', orderRouter);
+app.use('/api/v1/prices', priceRouter);
 app.use('/api/v1/auth', authRouter);
 
 // Middleware to handle errors
