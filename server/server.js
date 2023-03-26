@@ -54,7 +54,8 @@ stuff that happens in the middle of the the request and response.
 // avoid CORS error since our front-end is running on a different port
 // so our requests are 'cross origin' port 3000 -> 8000
 var  corsOptions  = {
-    origin: 'http://localhost:3000', //frontend url
+    // origin: 'http://localhost:3000', //frontend url
+    origin: 'http://3.83.146.55', //frontend url
     credentials: true}
 app.use(cors(corsOptions));
 
