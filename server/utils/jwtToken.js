@@ -12,8 +12,8 @@ const sendToken = (user, statusCode, res) => {
         httpOnly: true,
         // Domain: 'http//localhost:3000',
         // Path: '/',
-        // SameSite: 'none',
-        // Secure: true,
+        SameSite: 'none',
+        Secure: true,
         // 'Max-Age': "Session"
     }
 
