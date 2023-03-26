@@ -7,7 +7,22 @@ const catchAsyncErrors = require("./catchAsyncErrors");
 
 // Checks if user is authenticated or not 
 exports.isAuthenticatedUser = catchAsyncErrors( async (req, res, next) => {
+    // let token;
 
+    // if(
+    //     req.headers.authorization &&
+    //     req.headers.authorization.startsWith('Bearer')
+    // ) {
+    //     token = req.headers.authorization.split(' ')[1]
+
+    // }
+
+    // else if (req.cookies.token) {
+    //     token = req.cookies.token
+    // }
+    console.log("in authorization")
+    console.log(req.headers)
+    console.log(req.cookies)
     const { token } = req.cookies
 
     if(!token) {
@@ -17,7 +32,7 @@ exports.isAuthenticatedUser = catchAsyncErrors( async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
     req.user = await User.findById(decoded.id);
 
-    next()
+    next();
 
 })
 

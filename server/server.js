@@ -1,7 +1,11 @@
 const express = require('express');
 const cors = require('cors');
-
 const cookieParser = require('cookie-parser');
+const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
+const xss = require('xss-clean');
+const rateLimit = require('express-rate-limit');
+const hpp = require('hpp');
 
 
 const errorMiddleware = require('./middlewares/errors');
@@ -49,12 +53,37 @@ stuff that happens in the middle of the the request and response.
 
 // avoid CORS error since our front-end is running on a different port
 // so our requests are 'cross origin' port 3000 -> 8000
-app.use(cors());
+var  corsOptions  = {
+    origin: 'http://localhost:3000', //frontend url
+    credentials: true}
+app.use(cors(corsOptions));
 
 // req.body undefined without this!
 app.use(express.json());
 app.use(cookieParser());
 
+// Sanitize data
+app.use(mongoSanitize());
+
+// Set security headers
+app.use(helmet());
+
+// Prevent XSS attacks
+app.use(xss());
+
+// Rate limiting 
+const limiter = rateLimit({
+    windowMs: 10 * 60 * 1000, // 10 mins
+    max: 100
+});
+
+app.use(limiter);
+
+// Prevent http param pollution
+app.use(hpp());
+
+
+// Mount routers
 app.use('/api/v1/devices', deviceRouter);
 app.use('/api/v1/products', productRouter);
 app.use('/api//v1/payment/process', paymentRouter);

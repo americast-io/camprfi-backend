@@ -47,7 +47,7 @@ exports.loginUser = catchAsyncErrors( async (req, res, next) => {
 
 })
 
-// Get currently logged in user details   =>   /api/auth/me
+// Get currently logged in user details   =>   /api/v1/auth/me
 exports.getUserProfile = catchAsyncErrors(async (req, res, next) => {
     const user = await User.findById(req.user.id);
 

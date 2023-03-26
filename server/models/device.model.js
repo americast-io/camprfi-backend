@@ -13,7 +13,7 @@ const DeviceSchema = new mongoose.Schema(
       // dropDups: true,
     },
     
-    IMEI: {
+    imei: {
       type: String,
       required: [true, '{PATH} is required.'],
       minlength: [14, '{PATH} must be at least {MINLENGTH} characters.'],
@@ -25,7 +25,7 @@ const DeviceSchema = new mongoose.Schema(
       minlength: [6, '{PATH} must be at least {MINLENGTH} characters.'],
     },
 
-    ICCID: {
+    iccid: {
       type: String,
       required: [true, '{PATH} is required.'],
       minlength: [6, '{PATH} must be at least {MINLENGTH} characters.'],
