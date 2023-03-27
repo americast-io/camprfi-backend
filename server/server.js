@@ -22,7 +22,7 @@ process.on('uncaughtException', err => {
     console.log(`ERROR: ${err.stack}`);
     console.log('Shutting down due to uncaught exception');
     process.exit(1)
-} )
+})
 
 
 dotenv.config();
@@ -53,11 +53,30 @@ stuff that happens in the middle of the the request and response.
 
 // avoid CORS error since our front-end is running on a different port
 // so our requests are 'cross origin' port 3000 -> 8000
-var  corsOptions  = {
-    // origin: 'http://localhost:3000', //frontend url
-    origin: 'http://3.83.146.55', //frontend url
-    credentials: true}
-app.use(cors(corsOptions));
+// var  corsOptions  = {
+//     // origin: 'http://localhost:3000', //frontend url
+//     origin: 'http://3.83.146.55', //frontend url
+//     credentials: true}
+// app.use(cors(corsOptions));
+
+var allowedOrigins = ['https://camprfi.com', 'http://localhost:3000',
+    'http://3.83.146.55'];
+
+    // var allowedOrigins = ['http://localhost:3000'];
+app.use(cors({
+    origin: function (origin, callback) {
+        // allow requests with no origin 
+        // (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            var msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
+    credentials: true
+}));
 
 // req.body undefined without this!
 app.use(express.json());
