@@ -106,7 +106,7 @@ app.use(hpp());
 // Mount routers
 app.use('/api/v1/devices', deviceRouter);
 app.use('/api/v1/products', productRouter);
-app.use('/api//v1/payment/process', paymentRouter);
+app.use('/api/v1/payment/process', paymentRouter);
 app.use('/api/v1/orders', orderRouter);
 app.use('/api/v1/prices', priceRouter);
 app.use('/api/v1/auth', authRouter);
