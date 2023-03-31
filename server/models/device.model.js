@@ -31,6 +31,14 @@ const DeviceSchema = new mongoose.Schema(
       minlength: [6, '{PATH} must be at least {MINLENGTH} characters.'],
     },
 
+    wifiName: {
+      type: String,
+    },
+
+    wifiPassword: {
+      type: String
+    },
+
     user: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
