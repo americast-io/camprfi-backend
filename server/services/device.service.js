@@ -16,8 +16,6 @@ const getDeviceById = async (id) => {
 };
 
 const getDeviceByKeyword = async (data) => {
-  console.log('data'  + data)
-  console.log('service: getDeviceByKeyword');
   const device = await Device.find({ deviceNumber: data });
   return device;
 };
