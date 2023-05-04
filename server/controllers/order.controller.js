@@ -1,4 +1,5 @@
 const { Order } = require('../models/order.model');
+const schedule = require('node-schedule');
 
 const {
     createOrder,
@@ -104,6 +105,7 @@ const handleDevicePause = async (req, res, next) => {
     }
 }
 
+// Unpause
 const handleDeviceUnPauseWithOffer = async (req, res, next) => {
     console.log("making an unpause request to ultramobile")
     const priceId = req.body.priceId;
@@ -203,6 +205,120 @@ const handleDeviceUnpauseWithTimer = async (req, res, next) => {
     await handleDevicePause(req, res);
 }
 
+// main pause unpause functions with scheduled job 
+const handleDeviceUnpausePause = async (req, res, next) => {
+    const {priceId, iccid} = req.body;
+
+
+    const offerIdFromMap = priceToPlanMap[priceId]["offerId"];
+    console.log(offerIdFromMap)
+
+    const timeout = priceToPlanMap[priceId]["duration"];
+
+    const unPauseData = {
+        offerIds: [
+            offerIdFromMap
+        ],
+        callbackUrl: callbackUrl,
+        partnerTransactionId: partnerTransactionId,
+
+    }
+    
+    // first we need to upause plan right away 
+    try{
+        console.log('calling unpause right away  outside the job - ACTIVE')
+        const ultraRes = await axios.post(`${unPauseUrl}${iccid}`, unPauseData, {
+            headers: {
+                'Authorization': `Basic ${token}`
+            },
+        })
+
+        console.log(ultraRes.status)
+
+    }
+    catch(error){
+        console.log(error.data);
+        return res.status(error.response.status).json({error: error.message});
+    }
+    
+    // repeat task with cron job 
+    let i = 0;
+    let n = 1;
+
+
+    // job will start in 5 min and pause plan
+    const job = schedule.scheduleJob('*/5 * * * *', async function(){
+        console.log('In job schedule!', n);
+    
+        // pause in order to reset intenet data
+        try{
+            console.log('calling pause to reset data - PAUSE')
+            const ultraRes = await axios.post(`${pauseUrl}${iccid}`, data, {
+                headers: {
+                    'Authorization': `Basic ${token}`
+                },
+            })
+            
+        }
+        catch(error){
+            console.log(error);
+            return res.status(error.response.status).json({error: error.message});
+        }
+
+        //waiting to unpause due to Ulta API delay (time in milliseconds)
+        await timeoutFunc(60000);
+        
+        // unpause 
+        console.log("calling unpause - UNPAUSE")
+        try{
+            const ultraRes = await axios.post(`${unPauseUrl}${iccid}`, unPauseData, {
+                headers: {
+                    'Authorization': `Basic ${token}`
+                },
+            })
+    
+            console.log(ultraRes.status)
+    
+        }
+        catch(error){
+            console.log(error.data);
+            return res.status(error.response.status).json({error: error.message});
+        }
+
+        i++;
+        if (i===n) {
+            
+            job.cancel();
+        }
+    });
+
+    // await timeoutFunc(60000);
+
+    //  // pause at the end of order
+    // try{
+    //     const ultraRes = await axios.post(`${pauseUrl}${iccid}`, data, {
+    //         headers: {
+    //             'Authorization': `Basic ${token}`
+    //         },
+    //     })
+
+    //       // return back object to the front end
+    //     res.status(ultraRes.status).json({
+    //         success: true,
+    //         message: 'success',
+    //     })
+        
+    // }
+    // catch(error){
+    //     console.log(error);
+    //     return res.status(error.response.status).json({error: error.message});
+    // }
+
+    return res.status(200).json({message: "order fulfilled"});
+
+}
+
+
 
 module.exports = {
     handleCreateOrder: handleCreateOrder,
@@ -211,4 +327,5 @@ module.exports = {
     handleDeviceUnPauseWithOffer,
     handleDeviceUnpauseWithTimer: handleDeviceUnpauseWithTimer,
     handleGetAllOrders,
+    handleDeviceUnpausePause,
 };
