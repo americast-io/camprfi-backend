@@ -21,7 +21,6 @@ const Companyschema = new mongoose.Schema({
         ref: 'User',
         required: true
     }
-
     
 },
 
