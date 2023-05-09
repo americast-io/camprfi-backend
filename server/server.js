@@ -38,6 +38,7 @@ const { paymentRouter } = require('./routes/payment.routes');
 const { orderRouter } = require('./routes/order.routes');
 const { priceRouter } = require('./routes/price.routes');
 const { authRouter } = require('./routes/auth.routes');
+const { companyRouter } = require('./routes/company.routes');
 
 // requiring / importing runs the file!
 // This file doesn't need to export anything though, so we need a var.
@@ -110,6 +111,7 @@ app.use('/api/v1/payment/process', paymentRouter);
 app.use('/api/v1/orders', orderRouter);
 app.use('/api/v1/prices', priceRouter);
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/companies', companyRouter);
 
 // Middleware to handle errors
 app.use(errorMiddleware);

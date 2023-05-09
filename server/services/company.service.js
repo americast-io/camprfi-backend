@@ -20,7 +20,7 @@ const deleteCompanyById = async (id) => {
     return company;
 };
 
-const updateCompanyById = async (id) => {
+const updateCompanyById = async (id, data) => {
     const company = Company.findByIdAndUpdate(id, data, {
         runValidators: true,
         new: true,

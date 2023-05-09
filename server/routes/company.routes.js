@@ -16,8 +16,8 @@ const router = express.Router();
 router.post('/', handleCreateCompany);
 router.get('/', handleGetAllCompanies);
 router.get('/:id', handleGetCompanyById);
-router.delete('/id', handleDeleteCompanyById);
-router.put('/id', handleUpdateCompanyById);
+router.delete('/:id', handleDeleteCompanyById);
+router.put('/:id', handleUpdateCompanyById);
 
 module.exports = { companyRouter: router };
 

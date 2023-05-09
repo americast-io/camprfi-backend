@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
-const Companyschema = new mongoose.Schema({
+const Companyschema = new mongoose.Schema(
+    {
     companyName: {
         type: String,
         required: [true, '{PATH} is required.'],
@@ -19,9 +21,9 @@ const Companyschema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.ObjectId,
         ref: 'User',
-        required: true
+        required: false,
     }
-    
+
 },
 
 { timestamps: true } 

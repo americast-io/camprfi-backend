@@ -11,7 +11,7 @@ const {
 
 const handleCreateCompany = async (req, res) => {
 
-    req.body.user = req.user.id;
+    // req.body.user = req.user.id;
 
     try {
         const company = await createCompany(req.body);
@@ -49,10 +49,12 @@ const handleDeleteCompanyById = async (req, res) => {
 };
 
 const handleUpdateCompanyById = async (req, res) => {
+    console.log(req.body)
     try{
         const company = await updateCompanyById(req.params.id, req.body);
         return res.status(200).json(company);
     }catch (error) {
+        console.log(error)
         res.status(400).json(error);
     }
 }
