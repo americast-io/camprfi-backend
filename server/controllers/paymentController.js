@@ -3,7 +3,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 // Process stripe payment => /api/payment/process
 
-// function that receives the request from front end where we expect the amount value 
+// function that receives the request from front end where we expect the amount value and description with device id and plan details. 
 // we then pass it to the Stripe to make a payment intent 
 // then we return that intent back to the front end if successful or return error if request is not sucessful. 
 const processPayment = async (req, res, next) => {
@@ -12,9 +12,7 @@ const processPayment = async (req, res, next) => {
 
     try {
         // amount as integer in cents will come from request/event body from front end 
-        const { amount } = req.body.amount;
-        console.log(req.body);
-        console.log(req.body.amount);
+        const { amount, description } = req.body;
 
 
         // making a request to the Stripe server to make a payment with amount, currency and payment method type in a request body as object. 
@@ -24,7 +22,8 @@ const processPayment = async (req, res, next) => {
             currency: "usd",
             payment_method_types: ["card"],
 
-            metadata: { integration_check: 'accept_a_payment' }
+            metadata: { integration_check: 'accept_a_payment' },
+            description: req.body.description
         });
 
         // return back object to the front end
