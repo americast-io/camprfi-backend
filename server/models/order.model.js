@@ -16,7 +16,10 @@ const OrderSchema = new mongoose.Schema(
                 type: String,
                 required: [true, '{PATH} is required'],
             },
-            
+            priceId: {
+                type: String,
+                required: [true, '{PATH} is required'],
+            },    
         },
 
         productId: {

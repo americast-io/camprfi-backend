@@ -24,9 +24,19 @@ const data = {
     callbackUrl: callbackUrl,
     partnerTransactionId: partnerTransactionId,
 }
+// dev env
+// const priceToPlanMap = {
+//     price_1MK8DrJqcY7mo8Cz3fvOFN8G: {offerId: "1466", duration: 60000},
+//     price_1MK8a6JqcY7mo8Czzf7jUHWA: {offerId: "1467", duration: 60000},
+//     price_1MK8fMJqcY7mo8CzFmcO3CUa: {offerId: "1468", duration: 60000},
+// }
 
+// prod env
 const priceToPlanMap = {
-    ruety84754uyeriti: {offerId: "1149", duration: 60000}
+    price_1MKBklJqcY7mo8CzXoKMm06O: {offerId: "1469", duration: 60000},
+    price_1N47gxJqcY7mo8CzRQX4GK9k: {offerId: "1466", duration: 60000},
+    price_1N47ydJqcY7mo8Czs9b5S4mo: {offerId: "1467", duration: 60000},
+    price_1N48T4JqcY7mo8Czmtrbrftt: {offerId: "1468", duration: 60000},
 }
 
 function timeoutFunc(delay) {
@@ -168,50 +178,53 @@ const handleGetSubscribersByIccid = async (req, res, next) => {
     }
 }
 
-const handleDeviceUnpauseWithTimer = async (req, res, next) => {
-    console.log('calling unpause in timed function')
-    const priceId = req.body.priceId;
+// const handleDeviceUnpauseWithTimer = async (req, res, next) => {
+//     console.log('calling unpause in timed function')
+//     const priceId = req.body.priceId;
 
-    const offerIdFromMap = priceToPlanMap[priceId]["offerId"];
+//     const offerIdFromMap = priceToPlanMap[priceId]["offerId"];
 
-    const timeout = priceToPlanMap[priceId]["duration"];
+//     const timeout = priceToPlanMap[priceId]["duration"];
 
-    const unPauseData = {
-        offerIds: [
-            offerIdFromMap
-        ],
-        callbackUrl: callbackUrl,
-        partnerTransactionId: partnerTransactionId,
+//     const unPauseData = {
+//         offerIds: [
+//             offerIdFromMap
+//         ],
+//         callbackUrl: callbackUrl,
+//         partnerTransactionId: partnerTransactionId,
 
-    }
+//     }
 
-    const ultraRes = await axios.post(`${unPauseUrl}${req.params.iccid}`, unPauseData, {
-        headers: {
-            'Authorization': `Basic ${token}`
-        },
-    })
+//     const ultraRes = await axios.post(`${unPauseUrl}${req.params.iccid}`, unPauseData, {
+//         headers: {
+//             'Authorization': `Basic ${token}`
+//         },
+//     })
 
-    // await handleDeviceUnPauseWithOffer(req, res);
+//     // await handleDeviceUnPauseWithOffer(req, res);
 
-    console.log(ultraRes.status)
-
-
+//     console.log(ultraRes.status)
 
 
-    await timeoutFunc(60000);
 
-    console.log('calling pause in timed function')
 
-    await handleDevicePause(req, res);
-}
+//     await timeoutFunc(60000);
+
+//     console.log('calling pause in timed function')
+
+//     await handleDevicePause(req, res);
+// }
 
 // main pause unpause functions with scheduled job 
 const handleDeviceUnpausePause = async (req, res, next) => {
+    console.log('calling unpause in main timed function')
     const {priceId, iccid} = req.body;
+    console.log("PriceId", priceId);
+    console.log("ICID", iccid);
 
 
     const offerIdFromMap = priceToPlanMap[priceId]["offerId"];
-    console.log(offerIdFromMap)
+    console.log("OfferID", offerIdFromMap)
 
     const timeout = priceToPlanMap[priceId]["duration"];
 
@@ -223,6 +236,9 @@ const handleDeviceUnpausePause = async (req, res, next) => {
         partnerTransactionId: partnerTransactionId,
 
     }
+
+    // const resData = await handleGetSubscribersByIccid(req, res);
+    // console.log("resData", resData);
     
     // first we need to upause plan right away 
     try{
@@ -267,11 +283,21 @@ const handleDeviceUnpausePause = async (req, res, next) => {
 
         //waiting to unpause due to Ulta API delay (time in milliseconds)
         await timeoutFunc(60000);
+
+
+        const unPauseData2 = {
+            offerIds: [
+                "1469"
+            ],
+            callbackUrl: callbackUrl,
+            partnerTransactionId: partnerTransactionId,
+    
+        }
         
         // unpause 
-        console.log("calling unpause - UNPAUSE")
+        console.log("calling unpause - UNPAUSE and setting plan to 1469/1GB")
         try{
-            const ultraRes = await axios.post(`${unPauseUrl}${iccid}`, unPauseData, {
+            const ultraRes = await axios.post(`${unPauseUrl}${iccid}`, unPauseData2, {
                 headers: {
                     'Authorization': `Basic ${token}`
                 },
@@ -286,9 +312,10 @@ const handleDeviceUnpausePause = async (req, res, next) => {
         }
 
         i++;
-        if (i===n) {
+        if (i==n) {
             
             job.cancel();
+            console.log('job is finished');
         }
     });
 
@@ -325,7 +352,7 @@ module.exports = {
     handleDevicePause: handleDevicePause,
     handleGetSubscribersByIccid: handleGetSubscribersByIccid,
     handleDeviceUnPauseWithOffer,
-    handleDeviceUnpauseWithTimer: handleDeviceUnpauseWithTimer,
+    // handleDeviceUnpauseWithTimer: handleDeviceUnpauseWithTimer,
     handleGetAllOrders,
     handleDeviceUnpausePause,
 };

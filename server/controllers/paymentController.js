@@ -10,6 +10,8 @@ const processPayment = async (req, res, next) => {
 
     console.log('Making stripe request in processPayment');
 
+    console.log(req.body)
+
     try {
         // amount as integer in cents will come from request/event body from front end 
         const { amount, description } = req.body;
