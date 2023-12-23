@@ -262,8 +262,8 @@ const handleDeviceUnpausePause = async (req, res, next) => {
     let n = 1;
 
 
-    // job will start in 5 min and pause plan
-    const job = schedule.scheduleJob('*/5 * * * *', async function(){
+    // job will start in 23 hours and 50 min and pause plan
+    const job = schedule.scheduleJob('*/1430 * * * *', async function(){
         console.log('In job schedule!', n);
     
         // pause in order to reset intenet data
