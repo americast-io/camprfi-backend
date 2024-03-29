@@ -33,10 +33,28 @@ const data = {
 
 // prod env
 const priceToPlanMap = {
-    price_1MKBklJqcY7mo8CzXoKMm06O: {offerId: "1469", duration: 60000},
-    price_1N47gxJqcY7mo8CzRQX4GK9k: {offerId: "1466", duration: 60000},
-    price_1N47ydJqcY7mo8Czs9b5S4mo: {offerId: "1467", duration: 60000},
-    price_1N48T4JqcY7mo8Czmtrbrftt: {offerId: "1468", duration: 60000},
+    price_1MKBklJqcY7mo8CzXoKMm06O: {offerId: "1148", duration: 60000},
+    price_1MKBklJqcY7mo8CzS2dmgPFx: {offerId: "1148", duration: 60000},
+    
+    price_1N47XuJqcY7mo8CzyA2ARpjn: {offerId: "1149", duration: 60000},
+    price_1N47XuJqcY7mo8CzW1JD3wIC: {offerId: "1149", duration: 60000},
+
+
+    price_1OvrLyJqcY7mo8CzmGIf91az: {offerId: "1150", duration: 60000},
+    price_1N47gxJqcY7mo8CzxQ5yUksS: {offerId: "1150", duration: 60000},
+
+    price_1N47r2JqcY7mo8CzqnEGp4gz: {offerId: "1151", duration: 60000},
+    price_1N47r2JqcY7mo8CzySyYvSfO: {offerId: "1151", duration: 60000},
+
+    price_1N47ydJqcY7mo8Czs9b5S4mo: {offerId: "1152", duration: 60000},
+    price_1N47ydJqcY7mo8CzThUiQYxV: {offerId: "1152", duration: 60000},
+
+    price_1N48T4JqcY7mo8Czmtrbrftt: {offerId: "1153", duration: 60000},
+    price_1N48T4JqcY7mo8Cz6E0pETAs: {offerId: "1153", duration: 60000},
+
+
+
+    
 }
 
 function timeoutFunc(delay) {
